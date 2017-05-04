@@ -1,10 +1,10 @@
 <?php
 
-function comPdo() {
-	define('HOST','186.202.152.77');
-	define('USER','sdmg15');
-	define('PASS','tah2pe');
-	define('BD','sdmg15');
+function conexao_bd_tig_unibh() {
+	define('HOST','localhost');
+	define('USER','root');
+	define('PASS','');
+	define('BD','tig_unibh');
 	
 	/*
 	 * A PDO_MYSQL Data Source Name (DSN) é composta dos seguintes elementos:

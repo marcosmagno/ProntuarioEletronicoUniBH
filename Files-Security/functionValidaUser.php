@@ -1,56 +1,74 @@
 <?php
 session_start();
-
 include_once 'conexaoBD.php';
 include_once 'functionValidarDados.php';
 
-function liberaUser() {
-	
+function verificaUsuario() {
+	/*
+		Verifica dados do Usuário
+	*/	
 	global $mensageErro;
 	
 	if(isset($_POST['acessar'])):
-	$usuario = validarDados($_POST['usuario'], 'LOGIN', 'EMAIL');
-	$senha = validarDados($_POST['senha'], 'SENHA', 'STR');
+		
+		/* Recebe dados via Post da página Inicial
+			$usuario -> campo user [ index.php ]
+			$password -> campo password [index.php]
+		*/
+		$usuario = $_POST['user'];
+		$password = $_POST['password'];
 
-	if(!isset($mensageErro)):
+		/*
+		 Se não existir error ( mensageErro)
+		 	chama a Função validaDadosUsuario($usuario, $password)
+		 */
 
-	if(validarUser($usuario, $senha)):
-	$sucesso = "Logado com Sucesso";
-	else:
-	$mensageErro = "Erro ao logar no sistema";
-	endif;
-	endif;
+			if(!isset($mensageErro)):
+				if(validaDadosUsuario($usuario, $password)):
+					$sucesso = "Logado com Sucesso";
+				else:
+					$mensageErro = "Usuário ou Senha errados";
+				endif;
+			endif;
 	endif;
 }
 
 
 
-function validarUser($usuario, $senha){
+function validaDadosUsuario($usuario, $password){
 	global $mensageErro;
-	$conexao = comPdo();
+	
+	
+	
+	$conexao = conexao_bd_tig_unibh(); // Chama conexão com Banco de Dados
 
 	try {
-
-		$logar = $conexao->prepare("Select * from cadastro where email = ? AND senha = ?  LIMIT 1");
+		// Seleciona os dados do usuario [ usuario ] [ senha ]
+		$logar = $conexao->prepare("Select * from user where user = ? AND password = ?  LIMIT 1");
 		$logar->bindValue(1, $usuario);
-		$logar->bindValue(2, $senha);
+		$logar->bindValue(2, $password);
+		// Executa o script select
 		$logar->execute();
 
+		// função rowCount() conta quantos dados foram selecionados no script Select do SQL
+
 		if($logar->rowCount() == 1):
-		$dados = $logar->fetch(PDO::FETCH_ASSOC);
+				// cria uma estrutura FETCH_ASSOC
+				$dados = $logar->fetch(PDO::FETCH_ASSOC);
 
-		$_SESSION['userLogado'] = true;
-		$_SESSION['usuarioEmail'] = $dados['email'];
-		$_SESSION['usuarioNome'] = $dados['nome'];
-		$_SESSION['usuarioId'] = $dados['id'];
-		$_SESSION['usuarioLogado'] = $usuario;		
-		$_SESSION['usuarioSenha'] = $senha;
+				// Cria dados de SESSION
+				$_SESSION['userLogado'] = true; // get usuario logado : TRUE
+				$_SESSION['usuarioEmail'] = $dados['email']; // get email
+				$_SESSION['usuarioNome'] = $dados['first_name']; // get nome
+				$_SESSION['usuarioId'] = $dados['id']; // get id
+				$_SESSION['usuarioLogado'] = $dados['user']; // get usuário
+				
 
-
+		// Redireciona o usuário para a página do DASHBORD
 		header('location:Admin-Console/index-Console.php');
 
 		else:
-		$mensageErro = "Erro ao logar - Você não tem acesso.";
+				$mensageErro = "Erro ao logar - Você não tem acesso.";
 		endif;
 
 	}catch (PDOException $e) {
@@ -59,6 +77,10 @@ function validarUser($usuario, $senha){
 }
 
 
+/*
+	Função para proteger às páginas
+	que devẽrão ser autenticadas
+*/
 function protegePagina() {
 	global $_SG;
 
@@ -75,7 +97,7 @@ function protegePagina() {
 			// Verifica se os dados salvos na sessão batem com os dados do banco de dados
 				
 				
-			if (!validarUser($_SESSION['usuarioLogado'], $_SESSION['usuarioSenha'])) {
+			if (!validarUser($_SESSION['usuarioLogado'], $_SESSION['usuariopassword'])) {
 				// Os dados n�o batem, manda pra tela de login
 				expulsaVisitante();
 			}

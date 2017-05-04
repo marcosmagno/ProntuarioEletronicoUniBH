@@ -1,6 +1,6 @@
 <?php
 include_once 'Files-Security/functionValidaUser.php';
-liberaUser();
+verificaUsuario();
 ?>
 <!DOCTYPE html>
 <html lang="en" class="no-js">
@@ -22,12 +22,12 @@ liberaUser();
 				<br />
 				<form action="" method="post">
 					<p>
-						<input type="text" name="usuario" size="20px" class="inputEntrar"
-							placeholder="E-mail" />
+						<input type="text" name="user" size="20px" class="inputEntrar"
+							placeholder="Usuário" />
 					</p>
 
 					<p>
-						<input type="password" name="senha" class="inputEntrar"
+						<input type="password" name="password" class="inputEntrar"
 							placeholder="Senha" />
 					</p>
 					<p>
