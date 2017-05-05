@@ -62,6 +62,8 @@ function validaDadosUsuario($usuario, $password){
 				$_SESSION['usuarioNome'] = $dados['first_name']; // get nome
 				$_SESSION['usuarioId'] = $dados['id']; // get id
 				$_SESSION['usuarioLogado'] = $dados['user']; // get usuário
+				$_SESSION['usuarioLogado'] = $dados['picture']; // get picture
+				$_SESSION['usuarioLogado'] = $dados['user_type']; // get picture
 				
 
 		// Redireciona o usuário para a página do DASHBORD

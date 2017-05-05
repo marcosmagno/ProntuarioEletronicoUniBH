@@ -1,6 +1,6 @@
 <?php
-//include_once '../Files-Security/functionValidaUser.php';
-//protegePagina();
+include_once '../Files-Security/functionValidaUser.php';
+protegePagina();
 ?>
 <!DOCTYPE html>
 <html lang="en" class="no-js">
@@ -46,12 +46,14 @@
 					<!-- /gn-scroller -->
 				</nav>
 			</li>
-			<li><a href="#"><b>dashboard</b> </a></li>
+			<li><img src=<?php echo $destino = 'img_profiles/marcosmagno.jpg'?> width=60px></li></li>
 			<!-- Nome da Página -->
 			<li><a class="codrops-icon codrops-icon-drop"
-				href="#"><span><?php echo $_SESSION['usuarioNome']; ?>
-				</span> </a></li>
+			href="#"><?php echo $_SESSION['usuarioNome']; ?></span> </a>
+			
 
+			</li>
+			
 			<li><a href="http://localhost/webdata/logout.php">Sair</a></li>
 		</ul>
 	</div>
