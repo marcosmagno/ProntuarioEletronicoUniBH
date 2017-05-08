@@ -33,23 +33,19 @@ verificaUsuario();
 					<p>
 						<input type="submit" name="acessar" value="Entrar"
 							class="inputEntrar" />
-				
-				</form>
+							<input type="submit" name="cadastrar"  value="cadastrar"
+							class="inputEntrar" />
 
-				<?php 
-				
-				
-				echo isset($mensageErro) ? $mensageErro : '';?>
-				<?php echo isset($sucesso) ? $sucesso : '';?>
+						</p>
+				</form>
 
 				<?php
 
-				if(isset($_GET['login_attempt'])):
-				if($_GET['login_attempt'] == 1):
-				echo "Você não tem permissão";
-				endif;
-				endif;
-				?>
+
+				echo isset($mensageErro) ? $mensageErro : '';?>
+				<?php echo isset($sucesso) ? $sucesso : '';?>
+
+
 			</div>
 		</header>
 	</div>
@@ -61,3 +57,36 @@ verificaUsuario();
 		</script>
 </body>
 </html>
+<?php
+function get_post_action($name)
+{
+    $params = func_get_args();
+
+    foreach ($params as $name) {
+        if (isset($_POST[$name])) {
+          echo $name;
+            return $name;
+        }
+    }
+}
+switch (get_post_action('Entrar', 'cadastrar')) {
+    case 'Entrar':
+        echo'botao login ok';
+				if(isset($_GET['login_attempt'])):
+				if($_GET['login_attempt'] == 1):
+				echo "Você não tem permissão";
+				endif;
+				endif;
+
+				break;
+
+    case 'cadastrar':
+      //header("location:C:xampp/login");
+      header ('location:Cadastra_user.php');
+			  break;
+
+    default:
+        //echo "Erro";
+}
+
+?>

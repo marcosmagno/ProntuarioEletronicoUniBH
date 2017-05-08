@@ -50,10 +50,10 @@ protegePagina();
 			<!-- Nome da Página -->
 			<li><a class="codrops-icon codrops-icon-drop"
 			href="#"><?php echo $_SESSION['usuarioNome']; ?></span> </a>
-			
+
 
 			</li>
-			
+
 			<li><a href="http://localhost/webdata/logout.php">Sair</a></li>
 		</ul>
 	</div>

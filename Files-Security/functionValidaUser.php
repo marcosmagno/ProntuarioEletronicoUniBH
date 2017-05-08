@@ -6,17 +6,19 @@ include_once 'functionValidarDados.php';
 function verificaUsuario() {
 	/*
 		Verifica dados do Usuário
-	*/	
+	*/
 	global $mensageErro;
-	
+
 	if(isset($_POST['acessar'])):
-		
+
 		/* Recebe dados via Post da página Inicial
 			$usuario -> campo user [ index.php ]
 			$password -> campo password [index.php]
 		*/
 		$usuario = $_POST['user'];
 		$password = $_POST['password'];
+
+		$password = md5($password);
 
 		/*
 		 Se não existir error ( mensageErro)
@@ -37,23 +39,32 @@ function verificaUsuario() {
 
 function validaDadosUsuario($usuario, $password){
 	global $mensageErro;
-	
-	
-	
+
+
+
 	$conexao = conexao_bd_tig_unibh(); // Chama conexão com Banco de Dados
+
 
 	try {
 		// Seleciona os dados do usuario [ usuario ] [ senha ]
-		$logar = $conexao->prepare("Select * from user where user = ? AND password = ?  LIMIT 1");
-		$logar->bindValue(1, $usuario);
-		$logar->bindValue(2, $password);
+
+		$logar = $conexao->prepare("Select * from user where user = :usuario AND password = :password  ");
+
+		$logar->bindparam(':usuario', $usuario);
+		$logar->bindparam(':password', $password);
+		//var_dump($password);
+		//var_dump($usuario);
+
 		// Executa o script select
 		$logar->execute();
+		//retornar uma matriz com os valores
+		$retorno = $logar->fetchAll();
 
 		// função rowCount() conta quantos dados foram selecionados no script Select do SQL
 
 		if($logar->rowCount() == 1):
 				// cria uma estrutura FETCH_ASSOC
+			//	echo "nome ".$usuario."senha".$password;
 				$dados = $logar->fetch(PDO::FETCH_ASSOC);
 
 				// Cria dados de SESSION
@@ -64,11 +75,10 @@ function validaDadosUsuario($usuario, $password){
 				$_SESSION['usuarioLogado'] = $dados['user']; // get usuário
 				$_SESSION['usuarioLogado'] = $dados['picture']; // get picture
 				$_SESSION['usuarioLogado'] = $dados['user_type']; // get picture
-				
+
 
 		// Redireciona o usuário para a página do DASHBORD
-		header('location:Admin-Console/index-Console.php');
-
+			 header ('location: Admin-Console/index-Console.php');
 		else:
 				$mensageErro = "Erro ao logar - Você não tem acesso.";
 		endif;
@@ -85,7 +95,6 @@ function validaDadosUsuario($usuario, $password){
 */
 function protegePagina() {
 	global $_SG;
-
 	if (!isset($_SESSION['usuarioId']) OR !isset($_SESSION['usuarioNome'])) {
 
 		// Nâo há usuário logado
@@ -97,8 +106,8 @@ function protegePagina() {
 		if ($_SG['validaSempre'] == true) {
 
 			// Verifica se os dados salvos na sessão batem com os dados do banco de dados
-				
-				
+
+
 			if (!validarUser($_SESSION['usuarioLogado'], $_SESSION['usuariopassword'])) {
 				// Os dados n�o batem, manda pra tela de login
 				expulsaVisitante();
